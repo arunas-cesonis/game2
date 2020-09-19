@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject player;
-    private int maxEnemies = 20;
+    private int maxEnemies = 1;
     private static GameManager instance;
     private List<GameObject> enemies;
     // Start is called before the first frame update
@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
         if (CanSpawnEnemyAt(position))
         {
             GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+            Enemy e = enemy.GetComponent<Enemy>();
+            e.target = player;
             enemies.Add(enemy);
         }
     }

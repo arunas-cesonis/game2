@@ -1,8 +1,8 @@
 ﻿
+using UnityEditor;
 using UnityEngine;
 public class Player : MonoBehaviour
 {
-    private float directionalPlayerSpeed = 4.0f;
     private float playerSpeed = 10.0f;
     public enum ControlType { Tank, Directional, Mouse };
 
@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public GameObject pointer;
     private Rigidbody body;
     private Vector3 moveInput = Vector3.zero;
+    private Quaternion rotateInput = Quaternion.identity;
 
     // Start is called before the first frame update
     void Start()
@@ -52,8 +53,12 @@ public class Player : MonoBehaviour
                     {
                         Vector3 pointer = ray.GetPoint(distance);
                         Vector3 target = pointer - gameObject.transform.position;
-                        gameObject.transform.forward = target;
-
+                        Vector3 current = gameObject.transform.forward;
+                        rotateInput.SetFromToRotation(current, target);
+                    }
+                    else
+                    {
+                        rotateInput = Quaternion.identity;
                     }
                     Vector3 v = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
                     Vector3 h = Vector3.ProjectOnPlane(Camera.main.transform.right, Vector3.up);
@@ -77,6 +82,7 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         body.MovePosition(body.position + moveInput * playerSpeed * Time.fixedDeltaTime);
+        body.MoveRotation(body.rotation * rotateInput);
     }
 
 }
