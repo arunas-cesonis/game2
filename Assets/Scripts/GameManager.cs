@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject player;
-    private int maxEnemies = 1;
+    private int maxEnemies = 20;
     private static GameManager instance;
     private List<GameObject> enemies;
     // Start is called before the first frame update

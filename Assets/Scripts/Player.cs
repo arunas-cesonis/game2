@@ -2,22 +2,22 @@
 using UnityEngine;
 public class Player : MonoBehaviour
 {
-    private CharacterController controller;
     private float directionalPlayerSpeed = 4.0f;
-    private float mousePlayerSpeed = 10.0f;
+    private float playerSpeed = 10.0f;
     public enum ControlType { Tank, Directional, Mouse };
 
     public ControlType controlType;
 
     public GameObject weapon;
     public GameObject pointer;
-    
-
+    private Rigidbody body;
+    private Vector3 moveInput = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = gameObject.AddComponent<CharacterController>();
+        //controller = gameObject.AddComponent<CharacterController>();
+        body = GetComponent<Rigidbody>();
         weapon.SetActive(false);
     }
 
@@ -28,14 +28,14 @@ public class Player : MonoBehaviour
         {
             case ControlType.Tank:
                 {
-                    transform.Rotate(0, Input.GetAxis("Horizontal") * Time.deltaTime * 70, 0);
-                    controller.Move(transform.forward * Input.GetAxis("Vertical") * Time.deltaTime * 5);
+                    transform.Rotate(0, Input.GetAxis("Horizontal") * 15 * Time.deltaTime * playerSpeed, 0);
+                    moveInput = transform.forward * Input.GetAxis("Vertical");
                 }
                 break;
             case ControlType.Directional:
                 {
                     Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                    controller.Move(move * Time.deltaTime * directionalPlayerSpeed);
+                    moveInput = move;
 
                     if (move != Vector3.zero)
                     {
@@ -58,8 +58,7 @@ public class Player : MonoBehaviour
                     Vector3 v = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
                     Vector3 h = Vector3.ProjectOnPlane(Camera.main.transform.right, Vector3.up);
                     Vector3 move = v * Input.GetAxis("Vertical") + h * Input.GetAxis("Horizontal");
-                    controller.Move(move * mousePlayerSpeed * Time.deltaTime);
-
+                    moveInput = move;
                 }
                 break;
         }
@@ -73,6 +72,11 @@ public class Player : MonoBehaviour
             weapon.SetActive(false);
         }
 
+    }
+
+    void FixedUpdate()
+    {
+        body.MovePosition(body.position + moveInput * playerSpeed * Time.fixedDeltaTime);
     }
 
 }
