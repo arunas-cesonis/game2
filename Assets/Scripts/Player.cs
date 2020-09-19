@@ -14,22 +14,25 @@ public class Player : MonoBehaviour
     private Vector3 moveInput = Vector3.zero;
     private Quaternion rotateInput = Quaternion.identity;
 
-    // Start is called before the first frame update
     void Start()
     {
-        //controller = gameObject.AddComponent<CharacterController>();
         body = GetComponent<Rigidbody>();
         weapon.SetActive(false);
     }
 
-    // Update is called once per frame
+    private void SetRotateInputFrom(Vector3 target)
+    {
+        Vector3 current = gameObject.transform.forward;
+        rotateInput.SetFromToRotation(current, target);
+    }
+
     void Update()
     {
         switch (controlType)
         {
             case ControlType.Tank:
                 {
-                    transform.Rotate(0, Input.GetAxis("Horizontal") * 15 * Time.deltaTime * playerSpeed, 0);
+                    rotateInput = Quaternion.Euler(0, Input.GetAxis("Horizontal") * 10.0f, 0);
                     moveInput = transform.forward * Input.GetAxis("Vertical");
                 }
                 break;
@@ -40,7 +43,12 @@ public class Player : MonoBehaviour
 
                     if (move != Vector3.zero)
                     {
+                        SetRotateInputFrom(move);
                         gameObject.transform.forward = move;    
+                    }
+                    else
+                    {
+                        rotateInput = Quaternion.identity;
                     }
                 }
                 break;
@@ -53,8 +61,7 @@ public class Player : MonoBehaviour
                     {
                         Vector3 pointer = ray.GetPoint(distance);
                         Vector3 target = pointer - gameObject.transform.position;
-                        Vector3 current = gameObject.transform.forward;
-                        rotateInput.SetFromToRotation(current, target);
+                        SetRotateInputFrom(target);
                     }
                     else
                     {
@@ -82,7 +89,8 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         body.MovePosition(body.position + moveInput * playerSpeed * Time.fixedDeltaTime);
-        body.MoveRotation(body.rotation * rotateInput);
+        Quaternion rotateStep = Quaternion.Lerp(Quaternion.identity, rotateInput, Time.fixedDeltaTime * playerSpeed);
+        body.MoveRotation(body.rotation * rotateStep);
     }
 
 }
