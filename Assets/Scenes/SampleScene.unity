@@ -532,7 +532,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4503483814492132, guid: 32624770ef2cd1c4c81b4d2dfb496820, type: 3}
       propertyPath: controlType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4503483814492132, guid: 32624770ef2cd1c4c81b4d2dfb496820, type: 3}
       propertyPath: pointer

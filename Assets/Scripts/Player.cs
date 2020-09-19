@@ -75,7 +75,12 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        bool fireButton = 
+           Input.GetKey(KeyCode.Space) 
+           || Input.GetKey(KeyCode.F) 
+           || Input.GetMouseButton(0);
+
+        if (fireButton)
         {
             weapon.SetActive(true);
         }

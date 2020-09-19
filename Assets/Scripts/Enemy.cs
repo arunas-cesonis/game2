@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
         d.Normalize();
         if (d != Vector3.zero)
         {
-            //transform.forward = d;
+            //transform.forward = d; 
         }
         //print(d);
         //body.MovePosition(body.position + d * (Time.fixedDeltaTime * 0.1f));
